@@ -1,0 +1,15 @@
+# Python
+__pycache__/
+*.pyc
+
+# Ambiente virtuale (IMPORTANTISSIMO!)
+venv/
+env/
+
+# Database locale (opzionale, ma meglio inizialmente non caricarlo)
+# sette_e_mezzo.db
+
+# File di sistema e IDE
+.vscode/
+.DS_Store
+Thumbs.db

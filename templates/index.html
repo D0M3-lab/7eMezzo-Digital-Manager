@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>7 e Mezzo Digital</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        body { background: #1a472a; color: white; font-family: sans-serif; }
+        .container { max-width: 800px; }
+        .card-table { background: #2e7d32; border: 10px solid #5d4037; border-radius: 40px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .card-val { background: white; color: black; padding: 12px; border-radius: 8px; margin: 5px; display: inline-block; font-weight: bold; min-width: 55px; font-size: 1.4rem; text-align: center; }
+        .matta { border: 3px solid gold; color: #d32f2f; }
+        .back-card { background: #d32f2f; color: white; }
+        .leaderboard { background: rgba(0,0,0,0.3); border-radius: 15px; padding: 20px; }
+    </style>
+</head>
+<body>
+<div class="container py-5 text-center">
+    
+    {% if view == "menu" %}
+    <h1 class="mb-4">🃏 7 e Mezzo Management 🃏</h1>
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <div class="card bg-dark p-4 h-100">
+                <h3>Crea Giocatore</h3>
+                <form action="/add-player" method="post">
+                    <input type="text" name="username" class="form-control my-3" placeholder="Nome" required>
+                    <button class="btn btn-success w-100">Registra</button>
+                </form>
+            </div>
+        </div>
+        <div class="col-md-6 mb-3">
+            <div class="card bg-dark p-4 h-100">
+                <h3>Inizia Partita</h3>
+                <form action="/start-game" method="post">
+                    <select name="player_id" class="form-select my-2">
+                        {% for p in players %}<option value="{{ p.id }}">{{ p.username }} (€{{ p.balance }})</option>{% endfor %}
+                    </select>
+                    <input type="number" name="bet" class="form-control mb-3" placeholder="Scommessa €" required min="1">
+                    <button class="btn btn-warning w-100 fw-bold">GIOCA</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="leaderboard mt-4">
+        <h4>🏆 Top 5 Classifica</h4>
+        <table class="table table-dark table-hover">
+            <thead><tr><th>#</th><th>Nome</th><th>Saldo</th></tr></thead>
+            <tbody>
+                {% for top in leaderboard %}
+                <tr><td>{{ loop.index }}°</td><td>{{ top.username }}</td><td class="text-warning">€{{ top.balance }}</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% else %}
+    <div class="d-flex justify-content-between mb-3">
+        <h5>Utente: <b>{{ player.username }}</b></h5>
+        <h5 class="text-warning">Puntata: €{{ bet }}</h5>
+        <h5>Saldo: €{{ player.balance }}</h5>
+    </div>
+
+    <div class="card-table">
+        <div class="mb-4">
+            <h5>Mano del Banco</h5>
+            {% for card in dealer_hand %}<div class="card-val">{{ card if card != 10 else 'K♦' }}</div>{% endfor %}
+            {% if not game_over %}<div class="card-val back-card">?</div>{% endif %}
+        </div>
+        <div class="mb-4">
+            <h5>Tua Mano (Punti: {{ player_score }})</h5>
+            {% for card in player_hand %}<div class="card-val">{{ card if card != 10 else 'K♦' }}</div>{% endfor %}
+        </div>
+
+        {% if not game_over %}
+            <div class="d-flex justify-content-center gap-3">
+                <form action="/hit" method="post"><button class="btn btn-primary btn-lg">CARTA</button></form>
+                <form action="/stay" method="post"><button class="btn btn-danger btn-lg">STAI</button></form>
+            </div>
+        {% else %}
+            <div class="alert alert-light fs-4 fw-bold">{{ result_message }}</div>
+            <form action="/exit" method="post"><button class="btn btn-light">TORNA AL MENU</button></form>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+</body>
+</html>
