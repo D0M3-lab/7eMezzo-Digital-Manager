@@ -21,10 +21,10 @@ Un'applicazione web gestionale per il gioco del **7 e Mezzo**, sviluppata con **
    
 2. Avvia il server:
 
-  Bash
-  python -m uvicorn main:app --reload
+  Bash: python -m uvicorn main:app --reload
 
 3. Vai all'indirizzo: http://127.0.0.1:8000
 
 4. Nuova partita: Prima di avviare una nuova partita è necessario chiudere il terminale aperto in precedenza per avviarne uno nuovo, successivamente il gioco potrà continuare avviando nuovamente il server.
+
 
